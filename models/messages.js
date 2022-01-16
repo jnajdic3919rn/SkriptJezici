@@ -1,0 +1,43 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Messages extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate({ Users }) {
+      // define association here
+      this.belongsTo(Users, {foreignKey: 'userId', as: 'user'});
+    }
+  };
+  Messages.init({
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    body: {
+      type: DataTypes.STRING(2048),
+      allowNull: false
+    },
+    auto: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
+    sender: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+  }, {
+    sequelize,
+    modelName: 'Messages',
+  });
+  return Messages;
+};

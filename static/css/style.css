@@ -1,0 +1,50 @@
+table,
+th,
+td {
+  padding: 10px;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.ex1 {
+    margin-left: 40px;
+  }
+
+.container {
+    display: grid;
+    text-align: center;
+    justify-content: center;
+}
+
+.category__link {
+    text-align: center;
+    display: block;
+    text-decoration: none;
+    transition: 250ms all;
+}
+
+.category__link:hover {
+    transform: scale(1.1);
+}
+
+.category__img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.category__img--ex a img{
+    display: flex;
+    height: 300px;
+    margin-top:20px; 
+    margin-bottom:20px;
+}
+
+.category__img img {
+    width: 100%;
+    object-fit: cover;
+}

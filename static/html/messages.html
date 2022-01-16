@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <title>SJ Vezbe</title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script src="/js/messages.js"></script>
+        <style>
+            .bg {
+                background-color: rgb(39, 160, 93);
+        }
+        </style>
+    </head>
+    <body onload="init()">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/admin/">Administration</a></li>
+              <li class="breadcrumb-item">Notifications</li>
+            </ol>
+          </nav>
+          <h1> Notifications for users</h1>
+          <br>
+          <br>
+        <div class="container">
+            <div class="row">
+                <h2>Authomatic notifications:</h2>
+                <div class = "col-10" style="height: 300px; overflow: auto">
+                    <table class="table table-bordered" id="msgLstAuto"></table>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <h2>Notifications written by you:</h2>
+                <div class = "col-10" style="height: 300px; overflow: auto">
+                    <table class="table table-bordered" id="msgLst"></table>
+                </div>
+            <div class="col">
+                <h4>Create new notification for user:</h4>
+                <form method="post" action="/admin/messages">
+                    <br>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Description</label>
+                        <textarea type="body" class="form-control" id="body" name="body"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user" class="form-label">Receiver</label>
+                        <input type="text" class="form-control" id="user" name="user">
+                    </div>
+                    <div>
+                    <label for="cars">Type:</label>
+                        <select id="type" name="type">
+                        <option value="direct">Direct</option>
+                        <option value="information">Information</option>
+                        <option value="invitation">Invitation</option>
+                        </select>
+                        </div>
+                        <br>
+                    <button type="submit" class="btn btn-primary" id="send">Send</button>
+                </form>
+                <div id="action">
+                <br>
+                <button type="btn" class="btn btn-primary btn-dark" id="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </body>
+</html>
