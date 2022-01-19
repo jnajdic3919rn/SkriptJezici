@@ -28,11 +28,10 @@ function init() {
                     return;
                 }
                 let up = confirm("Request added!");
+                document.getElementById('title').value = '';
+                document.getElementById('body').value = '';
+                document.getElementById('date').value = '';
             })
-
-            document.getElementById('title').value = '';
-            document.getElementById('body').value = '';
-            document.getElementById('date').value = '';
     
         });
 }

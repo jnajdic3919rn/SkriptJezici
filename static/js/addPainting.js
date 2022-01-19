@@ -10,7 +10,7 @@ function init() {
     .then(res => res.json())
     .then(el => {
         const catLink = document.getElementById('categoryLink');
-        catLink.innerHTML += `<a href="/admin/categories/${id}">${el.name}</a>`;
+        catLink.innerHTML += `<a href="/admin/categories/${id}/paintings">${el.name}</a>`;
         document.getElementById('category').value = el.name;
               
     });

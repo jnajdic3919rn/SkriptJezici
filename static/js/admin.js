@@ -20,14 +20,7 @@ function init() {
             let id = res.userId;
             console.log(id);
 
-            fetch('http://127.0.0.1:8090/admin/users/' + id)
-            .then(res => res.json())
-            .then(data => {
-                if(data.admin || data.moderator)
-                    window.location.href = 'http://127.0.0.1:8000/admin/users';
-                else
-                    alert('You do not have admin permission!');
-        })
+            window.location.href = 'http://127.0.0.1:8000/admin/users';
        }
         
     });
@@ -43,14 +36,8 @@ function init() {
             console.log(res);
             let id = res.userId;
             console.log(id);
-            fetch('http://127.0.0.1:8090/admin/users/' + id)
-            .then(res => res.json())
-            .then(data => {
-                if(data.admin || data.moderator)
-                    window.location.href = 'http://127.0.0.1:8000/admin/requests';
-                else
-                    alert('You do not have needed permission!');
-            })
+            window.location.href = 'http://127.0.0.1:8000/admin/requests';
+        
         }
         
     });

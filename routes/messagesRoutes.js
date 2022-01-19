@@ -23,6 +23,7 @@ route.get('/:id', (req, res) => {
 });
 
 route.post('/', async (req, res) => {
+    console.log("print");
     try{
         const dataValid = {
             title: req.body.title,

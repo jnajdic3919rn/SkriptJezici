@@ -14,7 +14,7 @@ function init() {
     .then( res => res.json() )
     .then( el => {
         const catLink = document.getElementById('categoryLink');
-        catLink.innerHTML += `<a href="/admin/categories/${el.id}" id="link">${el.name}</a>`;
+        catLink.innerHTML += `<a href="/admin/categories/${el.id}/paintings" id="link">${el.name}</a>`;
         /// <a href="/admin/updateUser/${el.id}" class="btn btn-primary update" id = "updateUser">
     });
 
@@ -78,7 +78,7 @@ function init() {
                 let up = confirm("Painting updated!");
                 const catLink = document.getElementById('categoryLink');
                 document.getElementById("link").remove();
-                catLink.innerHTML += `<a href="/admin/categories/${selected.options[selected.selectedIndex].value}" id="link">${selected.options[selected.selectedIndex].text}</a>`;
+                catLink.innerHTML += `<a href="/admin/categories/${selected.options[selected.selectedIndex].value}/paintings" id="link">${selected.options[selected.selectedIndex].text}</a>`;
             })
     
         });

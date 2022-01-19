@@ -1,5 +1,5 @@
 const { sequelize, RequestsEx } = require('../models');
-const { authSchema, requestSchema } = require('../models/validation/requestSchema');
+const { requestSchema } = require('../models/validation/requestSchema');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const route = express.Router();

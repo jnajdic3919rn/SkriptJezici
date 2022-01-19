@@ -75,7 +75,7 @@ app.get('/admin', (req, res) => {
     res.sendFile('admin.html', { root: './static/html' });
 });
 
-app.get('/admin/updateUser/:id', (req, res) => {
+app.get('/admin/users/updateUser/:id', (req, res) => {
     res.sendFile('updateUser.html', { root: './static/html' });
 });
 
@@ -107,19 +107,15 @@ app.get('/admin/categories/updateCategory/:id', (req, res) => {
     res.sendFile('updateCategory.html', { root: './static/html' });
 });
 
-app.get('/admin/categories/seeCategory/:id', (req, res) => {
-    res.sendFile('seeCategory.html', { root: './static/html' });
-});
-
 app.get('/admin/categories/:id', (req, res) => {
-    res.sendFile('exploreCategory.html', { root: './static/html' });
+    res.sendFile('seeCategory.html', { root: './static/html' });
 });
 
 app.get('/admin/categories/:id/paintings', (req, res) => {
     res.sendFile('exploreCategory.html', { root: './static/html' });
 });
 
-app.get('/admin/categories/:id/painting/:id', (req, res) => {
+app.get('/admin/categories/:id/paintings/:id', (req, res) => {
     res.sendFile('seePainting.html', { root: './static/html' });
 });
 

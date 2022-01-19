@@ -1,3 +1,5 @@
+const cookies = document.cookie.split('=');
+const token = cookies[cookies.length - 1];
 function init() {
 
     const cookies = document.cookie.split('=');
@@ -20,13 +22,16 @@ function init() {
         .then(res => res.json())
         .then( data => {
            /// console.log(data);
-            
+           if(data.msg){
+            alert(data.msg);
+            return;
+            }
             const lst = document.getElementById('usrLst');
 
              lst.innerHTML += `<tr><th> ID </th> <th> Name </th> <th> Email </th> <th> Admin </th> <th> Moderator </th> <th> Action </th> </tr>`;
             data.forEach( el => {
                 lst.innerHTML += `<tr> <td> ${el.id} </td> <td> ${el.name} </td> <td> ${el.email}</td> <td> ${el.admin} </td> <td> ${el.moderator} <td>
-                <a href="/admin/updateUser/${el.id}" class="btn btn-primary update">
+                <a href="/admin/users/updateUser/${el.id}" class="btn btn-primary update">
                    Update
                 </a>
                 <button data-id="${el.id}" class="btn btn-secondary btn-dark delete" onclick="deleteUser(this)">
@@ -58,7 +63,7 @@ function init() {
         
         fetch('http://127.0.0.1:8090/admin/users', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify(data)
         })
             .then( res => res.json())
@@ -75,7 +80,7 @@ function init() {
                 document.getElementById('moderator').checked = false;
                 
                 document.getElementById('usrLst').innerHTML += `<tr> <td> ${data.id} </td> <td> ${data.name} </td> <td> ${data.email}</td> <td> ${data.admin} </td> <td> ${data.moderator} <td>
-                <a href="/admin/updateUser/${data.id}" class="btn btn-primary update">
+                <a href="/admin/users/updateUser/${data.id}" class="btn btn-primary update">
                    Update
                 </a>
                 <button data-id="${data.id}" class="btn btn-secondary btn-dark delete" onclick="deleteUser(this)">
@@ -94,9 +99,17 @@ function deleteUser(obj) {
          id = obj.getAttribute('data-id');
 
         fetch('http://127.0.0.1:8090/admin/users/' + id, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         })
-
+        .then(res => res.json())
+        .then(data => {
+            if(data.msg){
+                alert(data.msg);
+                return;
+            }
         var table = document.getElementById('usrLst');
         let i, row, colId;
         console.log(id);
@@ -106,7 +119,8 @@ function deleteUser(obj) {
                 document.getElementsByTagName('tr')[i].remove();
              }
            }  
-        }
+        });
+    }
 }
 
 function getCurrUser(){

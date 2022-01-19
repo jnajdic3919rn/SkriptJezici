@@ -4,7 +4,7 @@ function init() {
     const token = cookies[cookies.length - 1];
 
     const urlParams = window.location.href.split('/');
-    let id = urlParams[urlParams.length-1];
+    let id = urlParams[urlParams.length-2];
 
     const add = document.getElementById('add');
     add.innerHTML += `  <a href="/admin/categories/${id}/addPaint" class="btn btn-primary border-shadow add">
@@ -32,7 +32,7 @@ function init() {
                 console.log(data2);
                 data2.forEach( el => {
                     if(el.categoryId === data.id){
-                        lst.innerHTML += `<div class="col"> <a href="/admin/categories/${data.id}/painting/${el.id}" class="col text-center category__link" id="link-${el.id}">
+                        lst.innerHTML += `<div class="col"> <a href="/admin/categories/${data.id}/paintings/${el.id}" class="col text-center category__link" id="link-${el.id}">
                         <div clas="category__img--ex shadow">
                             <img src="${el.image}" alt="${el.name} loading="lazy">
                         </div>

@@ -1,3 +1,5 @@
+const cookies = document.cookie.split('=');
+const token = cookies[cookies.length - 1];
 function init(){
 
     const cookies = document.cookie.split('=');
@@ -76,11 +78,12 @@ function init(){
                             .then(res => res.json())
                             .then(usr => {
                                 usr.forEach( el => {
-                                    console.log(el.name);
-                                    console.log(document.getElementById('user').value);
+                                    console.log("1" + el.name);
+                                    console.log("2" + document.getElementById('user').value);
                                     if(el.name === document.getElementById('user').value)
                                         recId = el.id;
                                 })
+                                console.log("uidd " + recId);
                                 if(recId != -1){
                                     const data = {
                                         title: document.getElementById('title').value,

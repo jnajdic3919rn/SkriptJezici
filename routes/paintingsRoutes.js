@@ -7,16 +7,10 @@ route.use(express.urlencoded({ extended: true }));
 
 
 route.get('/', (req, res) => {
-    const token = req.headers['authorization'].split(' ')[1].split('\.')[1];
-    payload = JSON.parse(atob(token));
-    
-    if(payload.admin === false)
-        res.status(403).json({ message: "Do not have admin priveledges!"});
-    else{
+
         Paintings.findAll()
             .then( rows => res.json(rows) )
             .catch( err => res.status(500).json(err) );
-    }
     
 });
 

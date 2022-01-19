@@ -18,7 +18,7 @@ function init() {
             document.getElementById('about').innerHTML += el.description;
             document.getElementById('artist').innerHTML += el.artist;
             document.getElementById('year').innerHTML += el.year;
-            document.getElementById('categoryLink').innerHTML += `<a href="/admin/categories/${el.categoryId}">${category.name}</a>`;
+            document.getElementById('categoryLink').innerHTML += `<a href="/admin/categories/${el.categoryId}/paintings">${category.name}</a>`;
             document.getElementById('paintImage').innerHTML += `<img src="${el.image}" class="img-fluid sticky-top" style="top: 2-px;" alt="${el.name} loading="lazy">`;
           })
         });

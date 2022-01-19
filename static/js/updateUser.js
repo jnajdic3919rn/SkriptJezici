@@ -1,10 +1,20 @@
 function init() {
+    const cookies = document.cookie.split('=');
+    const token = cookies[cookies.length - 1];
     const urlParams = window.location.href.split('/');
     let id = urlParams[urlParams.length-1];
 
-    fetch('http://127.0.0.1:8090/admin/users/' + id)
+    fetch('http://127.0.0.1:8090/admin/users/' + id, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+    })
     .then( res => res.json() )
     .then( data => {
+        if(data.msg){
+            alert(data.msg);
+            return;
+        }
         document.getElementById('name').value = data.name;
         document.getElementById('email').value = data.email;
         document.getElementById('password').value = data.password;
@@ -32,7 +42,7 @@ function init() {
     
             fetch('http://127.0.0.1:8090/admin/users/'+id, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(data)
             })
             .then(res => res.json())

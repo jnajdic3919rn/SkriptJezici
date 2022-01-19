@@ -15,7 +15,7 @@ function init() {
             
             const lst = document.getElementById('categoryLst');
             data.forEach( el => {
-                lst.innerHTML += `<div class="col"> <a href="/admin/categories/${el.id}" class="col text-center category__link" id="link-${el.id}">
+                lst.innerHTML += `<div class="col"> <a href="/admin/categories/${el.id}/paintings" class="col text-center category__link" id="link-${el.id}">
                 <div clas="category__img--ex shadow">
                     <img src="${el.image}" alt="${el.name} loading="lazy">
                 </div>
@@ -23,7 +23,7 @@ function init() {
             </a>
             <br>
             <div class="text-center">
-            <a href="/admin/categories/seeCategory/${el.id}" class="btn border-shadow update" id="see-${el.id}">
+            <a href="/admin/categories/${el.id}" class="btn border-shadow update" id="see-${el.id}">
                 See
             </a>
             <a href="/admin/categories/updateCategory/${el.id}" class="btn border-shadow update" id="edit-${el.id}">
