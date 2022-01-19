@@ -1,5 +1,5 @@
 const { sequelize, Users} = require('../models');
-const { authSchema, registerSchema } = require('../models/validation/userSchema');
+const { registerSchema, updateSchema } = require('../models/validation/userSchema');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const route = express.Router();
@@ -45,7 +45,7 @@ route.post('/', async (req, res) => {
             password: req.body.password,
             email: req.body.email
         }
-        await registerSchema.validateAsync(dataValid);
+        await registerSchema.validateAsync(dataValid, { abortEarly: false });
         const hashPassword = await bcrypt.hash(req.body.password, 10);
         
         Users.create({ name: req.body.name, email: req.body.email, password: hashPassword, admin: req.body.admin, moderator: req.body.moderator, lastLogged: req.body.lastLogged })
@@ -54,17 +54,28 @@ route.post('/', async (req, res) => {
     }
     catch(err){
         console.log(err);
+        let fullMsg = "";
+        err.details.forEach(element => {
+            fullMsg = fullMsg + element.message + "\n";
+        });
         const data = {
-            msg: err.details[0].message
+            msg: fullMsg,
         }
-        console.log(data);
+        console.log(fullMsg);
         return res.status(400).json(data);
     }
 });
 
-route.put('/:id', (req, res) => {
+route.put('/:id', async (req, res) => {
     
-    Users.findOne({ where: { id: req.params.id } })
+    try{
+        
+        const dataValid = {
+            name: req.body.name,
+        }
+        await updateSchema.validateAsync(dataValid, { abortEarly: false });
+    
+        Users.findOne({ where: { id: req.params.id } })
         .then( usr => {
             usr.name = req.body.name;
             usr.admin = req.body.admin;
@@ -74,6 +85,19 @@ route.put('/:id', (req, res) => {
                 .catch( err => res.status(500).json(err) );
         })
         .catch( err => res.status(500).json(err) );
+    }
+    catch(err){
+        console.log(err);
+        let fullMsg = "";
+        err.details.forEach(element => {
+            fullMsg = fullMsg + element.message + "\n";
+        });
+        const data = {
+            msg: fullMsg,
+        }
+        console.log(fullMsg);
+        return res.status(400).json(data);
+    }
 
 });
 

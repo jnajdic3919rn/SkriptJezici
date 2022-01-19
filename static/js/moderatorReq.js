@@ -1,30 +1,3 @@
-/** 
-function init_start(){
-    let usr = getCurrUser();
-
-    if(usr === 'no user')
-    {
-        bannedView();
-        alert("You are not logged in!");
-        window.location.href = 'http://127.0.0.1:8000/login';
-        return;
-    } 
-    usrId = usr.userId;
-    console.log(usrId);
-    fetch('http://127.0.0.1:8090/admin/users/' + usrId)
-        .then( res => res.json() )
-        .then( data => {
-            console.log(data);
-            if(data.admin === true || data.moderator === true )
-                 init();
-            else{
-                bannedView();
-                alert("You do not have needed preveleges!");
-            }
-        });
-}
-*/
-
 function init() {
 
     const cookies = document.cookie.split('=');
@@ -33,15 +6,18 @@ function init() {
     fetch('http://127.0.0.1:8090/admin/requests')
         .then( res => res.json() )
         .then( data => {
+            let payload = token.split('.')[1];
+            let jsonpayload = JSON.parse(atob(payload));
+            let currUser = jsonpayload.user;
             const lst = document.getElementById('reqLstWait');
             const lst1 = document.getElementById('reqLstSolved');
-
+            
             lst.innerHTML += `<tr><th> ID </th> <th> Title </th> <th> Body </th> <th> User </th> <th> Date </th> <th> Status </th> <th> Action </th> </tr>`;
             lst1.innerHTML += `<tr><th> ID </th> <th> Title </th> <th> Body </th> <th> User </th> <th> Date </th> <th> Status </th> <th> Action </th> </tr>`;
             data.forEach( el => {
                 if(el.status === 'waiting'){
                     lst.innerHTML += `<tr> <td> ${el.id} </td> <td> ${el.title} </td> <td> <button data-id="${el.id}" class="btn btn-primary update" onclick="readDes(this)">
-                    Show Description </button> </td> <td> ${el.userId} </td> <td> ${el.date} </td> <td> ${el.status} </td>
+                    Show Description </button> </td> <td> ${el.user.name} </td> <td> ${el.date} </td> <td> ${el.status} </td>
                     <td>
                     <button data-id="${el.id}" class="btn btn-primary update" onclick="updateReq(this)">
                     Choose to update
@@ -49,9 +25,9 @@ function init() {
                     </td>
                      </tr>`;
                 }
-                else{
+                else if(el.status != 'waiting'){
                     lst1.innerHTML += `<tr class = "req2"> <td> ${el.id} </td> <td> ${el.title} </td> <td> <button data-id="${el.id}" class="btn btn-primary update" onclick="readDes(this)">
-                    Show Description </button> </td> <td> ${el.userId} </td> <td> ${el.date} </td> <td> ${el.status} </td>
+                    Show Description </button> </td> <td> ${el.user.name} </td> <td> ${el.date} </td> <td> ${el.status} </td>
                     <td>
                     <button data-id="${el.id}" class="btn btn-primary update" onclick="updateSolved(this)">
                     Choose to update
@@ -62,6 +38,7 @@ function init() {
                     </td>
                     </tr>`;
                 }
+                
             });
             /// <a href="/admin/updateUser/${el.id}" class="btn btn-primary update" id = "updateUser">
         });
@@ -75,7 +52,7 @@ function init() {
         else{
             let id;
             id = document.getElementById('reqDes').innerText.split(',')[0];
-           
+            console.log("nesto" + id);
             var i;
             let status = 'waiting';
             var radios = document.getElementsByName('status');
@@ -90,25 +67,21 @@ function init() {
                 status: status,
             };
         
-            if(status === 'waiting'){
-                alert("Status for chosen requests unchanged!");
-            }
-            else{
-                fetch('http://127.0.0.1:8090/admin/requests/' + id, {
+         
+            fetch('http://127.0.0.1:8090/admin/requests/' + id, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newInfo)
-                })
+            })
                 
                 fetch('http://127.0.0.1:8090/admin/requests/' + id)
                 .then(res => res.json())
                 .then(data => {
-                        var table = document.getElementById('reqLstWait');
+                        const table = document.getElementById('reqLstWait');
                         let row, colId;
                         let payload = token.split('.')[1];
                         let res = JSON.parse(atob(payload));
                         console.log(res);
-                        let id = res.userId;
                         console.log(id);
                         
                         /// send notification
@@ -126,16 +99,18 @@ function init() {
                             body: JSON.stringify(notify)
                         })
                         ///
-
-                        for (i = 1, row; row = table.rows[i]; i++) {
+                        for (let i = 1, row; row = table.rows[i]; i++) {
                             colId = row.cells[0].innerText;
                             if(colId === id){
-                                document.getElementsByTagName('tr')[i].remove();
+                                document.getElementById('reqLstWait').deleteRow(i);
                             }
                         }
-                        const lst = document.getElementById('reqLstSolved');
+                        fetch('http://127.0.0.1:8090/admin/users/' + data.userId)
+                        .then(res => res.json()
+                        .then(user => {
+                            const lst = document.getElementById('reqLstSolved');
                             lst.innerHTML += `<tr> <td> ${id} </td> <td> ${data.title} </td> <td> <button data-id="${id}" class="btn btn-primary update" onclick="readDes(this)">
-                            Show Description </button> </td> <td> ${data.userId} </td> <td> ${data.date} </td> <td> ${status} </td>
+                            Show Description </button> </td> <td> ${user.name} </td> <td> ${data.date} </td> <td> ${status} </td>
                             <td>
                             <button data-id="${id}" class="btn btn-primary update" onclick="updateSolved(this)">
                             Choose to update
@@ -147,9 +122,9 @@ function init() {
                             </tr>`;
                     
                         clean1();
-                });
+                        }))
                 
-            }
+                });
         }
     });
 
@@ -221,31 +196,35 @@ function init() {
                             document.getElementById('reqLstSolved').deleteRow(i);
                         }
                     }
-                    if(status == 'waiting'){
-                        const lst = document.getElementById('reqLstWait');
-                            lst.innerHTML += `<tr> <td class='bg'> ${id} </td> <td> ${data.title} </td> <td> <button data-id="${id}" class="btn btn-primary update" onclick="readDes(this)">
-                            Show Description </button> </td> <td> ${data.userId} </td> <td> ${data.date} </td> <td> ${data.status} </td>
+                    fetch('http://127.0.0.1:8090/admin/users/' + data.userId)
+                    .then(res => res.json())
+                    .then(user => {
+                        if(status == 'waiting'){
+                            const lst = document.getElementById('reqLstWait');
+                                lst.innerHTML += `<tr> <td class='bg'> ${id} </td> <td> ${data.title} </td> <td> <button data-id="${id}" class="btn btn-primary update" onclick="readDes(this)">
+                                Show Description </button> </td> <td> ${user.name} </td> <td> ${data.date} </td> <td> ${status} </td>
+                                <td>
+                                <button data-id="${id}" class="btn btn-primary update" onclick="updateReq(this)">
+                                Choose to update
+                                </button>
+                                </td> </tr>`;
+                        }
+                        else{
+                            const lst1 = document.getElementById('reqLstSolved');
+                            lst1.innerHTML += `<tr> <td class='bg'> ${id} </td> <td> ${data.title} </td> <td> <button data-id="${id}" class="btn btn-primary update" onclick="readDes(this)">
+                            Show Description </button> </td> <td> ${user.name} </td> <td> ${data.date} </td> <td> ${status} </td>
                             <td>
-                            <button data-id="${id}" class="btn btn-primary update" onclick="updateReq(this)">
+                            <button data-id="${id}" class="btn btn-primary update" onclick="updateSolved(this)">
                             Choose to update
                             </button>
-                            </td> </tr>`;
-                  }
-                  else{
-                    const lst1 = document.getElementById('reqLstSolved');
-                    lst1.innerHTML += `<tr> <td class='bg'> ${id} </td> <td> ${data.title} </td> <td> <button data-id="${id}" class="btn btn-primary update" onclick="readDes(this)">
-                    Show Description </button> </td> <td> ${data.userId} </td> <td> ${data.date} </td> <td> ${data.status} </td>
-                    <td>
-                    <button data-id="${id}" class="btn btn-primary update" onclick="updateSolved(this)">
-                    Choose to update
-                    </button>
-                    <button data-id="${id}" class="btn btn-primary btn-dark delete" onclick="deleteReq(this)">
-                    Delete
-                    </button>
-                    </td> 
-                    </tr>`;
-                  }
-                  clean2();
+                            <button data-id="${id}" class="btn btn-primary btn-dark delete" onclick="deleteReq(this)">
+                            Delete
+                            </button>
+                            </td> 
+                            </tr>`;
+                        }
+                        clean2();
+                });
         });
       }
     }
@@ -318,8 +297,10 @@ function deleteReq(obj){
         fetch('http://127.0.0.1:8090/admin/requests/' + id)
         .then(res => res.json())
         .then(data => {
-            if(data.status === 'accepted')
+            if(data.status === 'accepted'){
                 alert("Cannot delete accepted request until it's finished!");
+                return;
+            }
             else{
                 fetch('http://127.0.0.1:8090/admin/requests/' + id, {
                 method: 'DELETE'

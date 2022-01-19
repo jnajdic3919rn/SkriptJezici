@@ -24,6 +24,8 @@ function init() {
                 mod = true;
             const data = {
                 name: document.getElementById('name').value,
+                password: document.getElementById('password').value,
+                email: document.getElementById('email').value,
                 admin: adm,
                 moderator: mod,
             };
@@ -32,7 +34,13 @@ function init() {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
-            }).then(res => {
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.msg){
+                    alert(data.msg);
+                    return;
+                }
                 let up = confirm("User updated!");
             })
     

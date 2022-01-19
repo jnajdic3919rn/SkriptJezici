@@ -23,6 +23,9 @@ function init() {
             </a>
             <br>
             <div class="text-center">
+            <a href="/admin/categories/seeCategory/${el.id}" class="btn border-shadow update" id="edit-${el.id}">
+                See
+            </a>
             <a href="/admin/categories/updateCategory/${el.id}" class="btn border-shadow update" id="edit-${el.id}">
                 Edit
             </a>

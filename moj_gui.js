@@ -87,6 +87,10 @@ app.get('/admin/requests', (req, res) => {
     res.sendFile('moderatorReq.html', { root: './static/html' });
 });
 
+app.get('/admin/requests/changeRequest/:id', (req, res) => {
+    res.sendFile('changeReq.html', { root: './static/html' });
+});
+
 app.get('/admin/messages', (req, res) => {
     res.sendFile('messages.html', { root: './static/html' });
 });
@@ -101,6 +105,10 @@ app.get('/admin/categories/addCategory', (req, res) => {
 
 app.get('/admin/categories/updateCategory/:id', (req, res) => {
     res.sendFile('updateCategory.html', { root: './static/html' });
+});
+
+app.get('/admin/categories/seeCategory/:id', (req, res) => {
+    res.sendFile('seeCategory.html', { root: './static/html' });
 });
 
 app.get('/admin/categories/:id', (req, res) => {

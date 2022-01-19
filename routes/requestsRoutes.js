@@ -1,5 +1,5 @@
 const { sequelize, RequestsEx } = require('../models');
-const { authSchema, registerSchema } = require('../models/validation/userSchema');
+const { authSchema, requestSchema } = require('../models/validation/requestSchema');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const route = express.Router();
@@ -22,15 +22,35 @@ route.get('/:id', (req, res) => {
     
 });
 
-route.post('/', (req, res) => {
+route.post('/', async (req, res) => {
 
-    RequestsEx.create({ title: req.body.title, body: req.body.body, date: req.body.date, status: req.body.status, userId: req.body.userId })
-    .then( rows => res.json(rows) )
-    .catch( err => res.status(500).json(err) );
+    try{
+        const dataValid = {
+            title: req.body.title,
+            description: req.body.body,
+        }
+        await requestSchema.validateAsync(dataValid, { abortEarly: false });
+        RequestsEx.create({ title: req.body.title, body: req.body.body, date: req.body.date, status: req.body.status, userId: req.body.userId })
+        .then( rows => res.json(rows) )
+        .catch( err => res.status(500).json(err) );
+    }
+    catch(err){
+        console.log(err);
+        let fullMsg = "";
+        err.details.forEach(element => {
+            fullMsg = fullMsg + element.message + "\n";
+        });
+        const data = {
+            msg: fullMsg,
+        }
+        console.log(fullMsg);
+        return res.status(400).json(data);
+    }
     
 });
 
 route.put('/:id', (req, res) => {
+    
     console.log('jeej saad');
     RequestsEx.findOne({ where: { id: req.params.id }, include: ['user'] })
     .then( reqex => {
