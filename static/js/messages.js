@@ -127,9 +127,9 @@ function init(){
                                         document.getElementById('user').value = '';
                                     })
                                 }
-
+                                else 
+                                    alert("User does not exist!");
                             })
-                           alert("User does not exist!");
                         });
                     
 }
@@ -184,7 +184,6 @@ function updateMsg(obj){
             document.getElementById('title').value = data.title;
             document.getElementById('body').value = data.body;
             document.getElementById('user').value = data.user.name;
-            alert("User does not exist!");
             document.getElementById('user').disabled = true;
             const action = document.getElementById('action');
             document.getElementById('cancelBtn').remove();
