@@ -1,5 +1,5 @@
 const { sequelize, Messages} = require('../models');
-const { authSchema, registerSchema } = require('../models/validation/userSchema');
+const { messageSchema } = require('../models/validation/messageSchema');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const route = express.Router();
@@ -22,17 +22,41 @@ route.get('/:id', (req, res) => {
 
 });
 
-route.post('/', (req, res) => {
-    console.log(req.body);
-    Messages.create({title: req.body.title, body: req.body.body, auto: req.body.auto, type: req.body.type, userId: req.body.userId, sender: req.body.sender })
-        .then( rows => res.json(rows) )
-        .catch( err => res.status(500).json(err) );
+route.post('/', async (req, res) => {
+    try{
+        const dataValid = {
+            title: req.body.title,
+            body: req.body.body,    
+        }
+        await messageSchema.validateAsync(dataValid, { abortEarly: false });
+        console.log(req.body);
+        Messages.create({title: req.body.title, body: req.body.body, auto: req.body.auto, type: req.body.type, userId: req.body.userId, sender: req.body.sender })
+            .then( rows => res.json(rows) )
+            .catch( err => res.status(500).json(err) );
+    }
+    catch(err){
+        console.log(err);
+        let fullMsg = "";
+        err.details.forEach(element => {
+            fullMsg = fullMsg + element.message + "\n";
+        });
+        const data = {
+            msg: fullMsg,
+        }
+        console.log(fullMsg);
+        return res.status(400).json(data);
+    }
 
 });
 
-route.put('/:id', (req, res) => {
-    
-    Messages.findOne({ where: { id: req.params.id }, include: ['user'] })
+route.put('/:id', async (req, res) => {
+    try{
+        const dataValid = {
+            title: req.body.title,
+            body: req.body.body,    
+        }
+        await messageSchema.validateAsync(dataValid, { abortEarly: false });
+        Messages.findOne({ where: { id: req.params.id }, include: ['user'] })
         .then( msg => {
             msg.title = req.body.title;
             msg.body = req.body.body;
@@ -43,6 +67,19 @@ route.put('/:id', (req, res) => {
                 .catch( err => res.status(500).json(err) );
         })
         .catch( err => res.status(500).json(err) );
+    }
+    catch(err){
+        console.log(err);
+        let fullMsg = "";
+        err.details.forEach(element => {
+            fullMsg = fullMsg + element.message + "\n";
+        });
+        const data = {
+            msg: fullMsg,
+        }
+        console.log(fullMsg);
+        return res.status(400).json(data);
+    }
 
 });
 

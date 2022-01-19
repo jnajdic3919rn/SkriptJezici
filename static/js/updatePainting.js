@@ -69,18 +69,17 @@ function init() {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json',  'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(data)
-            }).then(res => {
+            }).then(res => res.json())
+              .then(data => {
+                if(data.msg){
+                    alert(data.msg);
+                    return;
+                }
                 let up = confirm("Painting updated!");
                 const catLink = document.getElementById('categoryLink');
                 document.getElementById("link").remove();
                 catLink.innerHTML += `<a href="/admin/categories/${selected.options[selected.selectedIndex].value}" id="link">${selected.options[selected.selectedIndex].text}</a>`;
             })
-
-            document.getElementById('name').value = '';
-            document.getElementById('description').value = '';
-            document.getElementById('year').value = '';
-            document.getElementById('artist').value = '';
-            document.getElementById('image').value = '';
     
         });
 }

@@ -98,6 +98,10 @@ function init(){
                                     })
                                     .then(res => res.json())
                                     .then(newMsg => {
+                                        if(newMsg.msg){
+                                            alert(newMsg.msg);
+                                            return;
+                                        }
                                         fetch('http://127.0.0.1:8090/admin/messages/' + newMsg.id)
                                         .then(res => res.json())
                                         .then(msg => {
@@ -123,23 +127,8 @@ function init(){
                             })
                            
                         });
-
-                        document.getElementById('cancel').addEventListener('click', e => {
-                                document.getElementById('title').value = '';
-                                document.getElementById('body').value = '';
-                                document.getElementById('user').value = '';
-                        });
                     
 }
-
-/** 
-async function getCurrUser(){
-    let token = document.cookie.split(';')[0].split('=')[1];
-    console.log(token);
-    let payload = token.split('.')[1];
-    return JSON.parse(atob(payload));
-}
-*/
 
 function readDes(obj){
     let id;
@@ -189,7 +178,9 @@ function updateMsg(obj){
         document.getElementById('user').value = data.user.name;
         document.getElementById('user').disabled = true;
         const action = document.getElementById('action');
+        document.getElementById('cancelBtn').remove();
         action.innerHTML += `<button data-id="${id}" type="submit" class="btn btn-primary btn-white" id="update" onclick="update(this)">Update</button>`
+        action.innerHTML += `<button data-id="${id}" type="cancel" class="btn btn-primary btn-dark" id="cancel" onclick="cancel(this)">Cancel</button>`
     });
 
 }
@@ -207,8 +198,13 @@ function update(obj){
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-         }).then(res => {
-             let up = confirm("Message updated!");
+         }).then(res => res.json())
+           .then(data => {
+            if(data.msg){
+                alert(data.msg);
+                return;
+            }
+            let up = confirm("Message updated!");
         
     var table = document.getElementById('msgLst');
     let i, row, colId;
@@ -237,8 +233,29 @@ function update(obj){
      }  
     })
     document.getElementById('update').remove();
+    document.getElementById('cancel').remove();
+    document.getElementById('action').innerHTML += `<button type="btn" class="btn btn-primary btn-dark" id="cancelBtn">Cancel</button>`;
     document.getElementById('title').value = '';
     document.getElementById('body').value = '';
     document.getElementById('user').value = '';
     document.getElementById('user').disabled = false;
+}
+
+function cancel(obj){
+    document.getElementById('title').value = '';
+    document.getElementById('body').value = '';
+    document.getElementById('user').disabled = false;
+    document.getElementById('user').value = '';
+    document.getElementById('update').remove();
+    document.getElementById('cancel').remove();
+    document.getElementById('action').innerHTML += `<button type="btn" class="btn btn-primary btn-dark" id="cancelBtn" onclick="cancelAdd()">Cancel</button>`;
+
+}
+
+function cancelAdd(){
+
+    document.getElementById('title').value = '';
+    document.getElementById('body').value = '';
+    document.getElementById('user').disabled = false;
+    document.getElementById('user').value = '';
 }

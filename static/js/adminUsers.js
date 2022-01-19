@@ -55,12 +55,6 @@ function init() {
             moderator: mod,
             lastLogged: new Date()
         };
-
-        document.getElementById('name').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('password').value = '';
-        document.getElementById('admin').checked = false;
-        document.getElementById('moderator').checked = false;
         
         fetch('http://127.0.0.1:8090/admin/users', {
             method: 'POST',
@@ -74,6 +68,11 @@ function init() {
                     alert(data.msg);
                     return;
                 }
+                document.getElementById('name').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('admin').checked = false;
+                document.getElementById('moderator').checked = false;
                 
                 document.getElementById('usrLst').innerHTML += `<tr> <td> ${data.id} </td> <td> ${data.name} </td> <td> ${data.email}</td> <td> ${data.admin} </td> <td> ${data.moderator} <td>
                 <a href="/admin/updateUser/${data.id}" class="btn btn-primary update">
@@ -83,7 +82,6 @@ function init() {
                 Delete
               </button>
             </td> </tr>`;
-            
             })
     });
 
