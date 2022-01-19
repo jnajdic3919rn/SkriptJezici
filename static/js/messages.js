@@ -129,7 +129,7 @@ function init(){
                                 }
 
                             })
-                           
+                           alert("User does not exist!");
                         });
                     
 }
@@ -177,14 +177,20 @@ function updateMsg(obj){
     fetch('http://127.0.0.1:8090/admin/messages/' + id)
     .then( res => res.json() )
     .then( data => {
-        document.getElementById('title').value = data.title
-        document.getElementById('body').value = data.body;
-        document.getElementById('user').value = data.user.name;
-        document.getElementById('user').disabled = true;
-        const action = document.getElementById('action');
-        document.getElementById('cancelBtn').remove();
-        action.innerHTML += `<button data-id="${id}" type="submit" class="btn btn-primary btn-white" id="update" onclick="update(this)">Update</button>`
-        action.innerHTML += `<button data-id="${id}" type="cancel" class="btn btn-primary btn-dark" id="cancel" onclick="cancel(this)">Cancel</button>`
+        if(data.user == null){
+            alert("User does not exist anymore!");
+        }
+        else{
+            document.getElementById('title').value = data.title;
+            document.getElementById('body').value = data.body;
+            document.getElementById('user').value = data.user.name;
+            alert("User does not exist!");
+            document.getElementById('user').disabled = true;
+            const action = document.getElementById('action');
+            document.getElementById('cancelBtn').remove();
+            action.innerHTML += `<button data-id="${id}" type="submit" class="btn btn-primary btn-white" id="update" onclick="update(this)">Update</button>`
+            action.innerHTML += `<button data-id="${id}" type="cancel" class="btn btn-primary btn-dark" id="cancel" onclick="cancel(this)">Cancel</button>`
+        }
     });
 
 }
