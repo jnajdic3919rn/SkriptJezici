@@ -24,7 +24,7 @@ function init(){
                                 lst.innerHTML += `<tr><th> ID </th> <th> Title </th> <th> Content </th> <th> Reciever </th> <th> Type </th> <th> Sent </th> </tr>`;
                                 lst1.innerHTML += `<tr><th> ID </th> <th> Title </th> <th> Content </th> <th> Reciever </th> <th> Type </th> <th> Sent </th> <th> Action </th> </tr>`;
                                 data.forEach( el => {
-                                    console.log(data2.name + " " + el.auto + " " + el.sender);
+                                    console.log(data2.name + " " + el.auto + " " + el.sender + " " + el.userId);
                                     if(el.auto && el.sender === data2.name){
                                         const now = new Date().toISOString().split('T')[0];
                                         const dt = el.createdAt.split('T')[0];
@@ -33,8 +33,9 @@ function init(){
                                         const diffTime = Math.abs(d1 - d2);
                                         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
                                         console.log(diffDays + " " + d1 + " " + d2);
+
                                         if(diffDays <= 10){
-                                          lst.innerHTML += `<tr> <td> ${el.id} </td> <td> ${el.title} </td> <td> ${el.body} </td> <td> ${el.user.name} </td> <td> ${el.type} </td> <td> ${el.createdAt} </td> </tr>`;
+                                          lst.innerHTML += `<tr> <td> ${el.id} </td> <td> ${el.title} </td> <td> ${el.body} </td> <td> ${el.userId} </td> <td> ${el.type} </td> <td> ${el.createdAt} </td> </tr>`;
                                         }
                                         else{
                                             fetch('http://127.0.0.1:8090/admin/messages/' + el.id, {
@@ -44,7 +45,7 @@ function init(){
                                     }
                                     else if(el.auto === false && el.sender === data2.name){
                                         lst1.innerHTML += `<tr> <td> ${el.id} </td> <td> ${el.title} </td> <td> <button data-id="${el.id}" class="btn btn-primary update" onclick="readDes(this)">
-                                        Show Description </button> </td> <td> ${el.user.name} </td> <td> ${el.type} </td> <td> ${el.updatedAt} </td>
+                                        Show Description </button> </td> <td> ${el.userId} </td> <td> ${el.type} </td> <td> ${el.updatedAt} </td>
                                         <td>
                                         <button data-id="${el.id}" class="btn btn-primary update" onclick="updateMsg(this)">
                                         Choose to update
@@ -110,7 +111,7 @@ function init(){
                                         .then(msg => {
                                             const lst = document.getElementById('msgLst');
                                             lst.innerHTML += `<tr> <td> ${msg.id} </td> <td> ${msg.title} </td> <td> <button data-id="${msg.id}" class="btn btn-primary update" onclick="readDes(this)">
-                                                    Show Description </button> </td> <td> ${msg.user.name} </td> <td> ${msg.type} </td> <td> ${msg.updatedAt} </td>
+                                                    Show Description </button> </td> <td> ${msg.userId} </td> <td> ${msg.type} </td> <td> ${msg.updatedAt} </td>
                                                     <td>
                                                     <button data-id="${msg.id}" class="btn btn-primary update" onclick="updateMsg(this)">
                                                     Choose to update
@@ -220,7 +221,7 @@ function update(obj){
              .then(res => res.json())
              .then(el =>{
                 table.innerHTML += `<tr> <td> ${el.id} </td> <td> ${el.title} </td> <td> <button data-id="${el.id}" class="btn btn-primary update" onclick="readDes(this)">
-                Show Description </button> </td> <td> ${el.user.name} </td> <td> ${el.type} </td> <td> ${el.updatedAt} </td>
+                Show Description </button> </td> <td> ${el.userId} </td> <td> ${el.type} </td> <td> ${el.updatedAt} </td>
                 <td>
                 <button data-id="${el.id}" class="btn btn-primary update" onclick="updateMsg(this)">
                 Choose to update
